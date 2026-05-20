@@ -1,0 +1,41 @@
+# Python environment
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Data directories (heavy files)
+datathon_2026_processed/
+save_parquet/duckdb_temp/
+save_parquet/*.duckdb
+*.parquet
+
+# Large files
+*.csv
+*.xlsx
+*.xls
+*.zip
+*.tar.gz
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Cache
+*.cache
+.pytest_cache/
