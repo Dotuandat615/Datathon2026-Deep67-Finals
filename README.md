@@ -3,18 +3,25 @@
 ## Project overview
 This repository contains a full recommender system pipeline for the Datathon 2026 finals. The pipeline ingests cleaned parquet datasets, builds user and item aggregates, generates recall candidates from multiple channels, trains a learning-to-rank model with time-based validation, and exports a submission file in the required format.
 
-The main implementation lives in the notebook [recsys_5_fixed.ipynb](recsys_5_fixed.ipynb). It follows a leakage-safe workflow (all features computed up to a feature cutoff date) and uses a multi-stage ranking stack optimized for recall and final ranking quality.
+The main implementation lives in the notebook [recsys_5_fixed.ipynb](notebooks/recsys_5_fixed.ipynb). It follows a leakage-safe workflow (all features computed up to a feature cutoff date) and uses a multi-stage ranking stack optimized for recall and final ranking quality.
 
 ## Repository structure
-- [recsys_5_fixed.ipynb](recsys_5_fixed.ipynb): End-to-end pipeline (feature engineering, candidate generation, training, scoring, submission).
+- [notebooks/recsys_5_fixed.ipynb](notebooks/recsys_5_fixed.ipynb): End-to-end pipeline (feature engineering, candidate generation, training, scoring, submission).
+- [notebooks/eda_datathon.ipynb](notebooks/eda_datathon.ipynb): Exploratory analysis notebook.
+- [notebooks/recsys_5_market_health_compare.ipynb](notebooks/recsys_5_market_health_compare.ipynb): Market-health comparison notebook.
+- [notebooks/recsys_5_market_health_compare_2.ipynb](notebooks/recsys_5_market_health_compare_2.ipynb): Alternate market-health comparison notebook.
+- [notebooks/05_marketplace_health_tradeoff.ipynb](notebooks/05_marketplace_health_tradeoff.ipynb): Marketplace health trade-off notebook.
 - datathon_2026_processed/: Cleaned parquet inputs and test users.
+- marketplace_health_tradeoff_assets/: Assets generated for the marketplace health tradeoff notebook.
 - output/: Generated `submission.csv` and provided `sample_submission.csv`.
+- report_recsys_5_assets/: Report artifacts and summary metrics.
 - save_parquet/: Optional cached parquet intermediates and DuckDB temp files.
+- src/: Shared Python helpers for health and reranking logic.
+- tools/: Notebook and report generation utilities.
 
 ### Folder structure map
 ```
 Datathon2026-Deep67-Finals/
-├─ recsys_5_fixed.ipynb
 ├─ README.md
 ├─ datathon_2026_processed/
 │  ├─ train_clean/
@@ -28,11 +35,27 @@ Datathon2026-Deep67-Finals/
 │  │     └─ **/*.parquet
 │  └─ test/
 │     └─ test_users.parquet
+├─ marketplace_health_tradeoff_assets/
+├─ notebooks/
+│  ├─ 05_marketplace_health_tradeoff.ipynb
+│  ├─ eda_datathon.ipynb
+│  ├─ recsys_5_fixed.ipynb
+│  ├─ recsys_5_market_health_compare.ipynb
+│  ├─ recsys_5_market_health_compare_2.ipynb
+│  └─ outputs/
 ├─ output/
 │  ├─ sample_submission.csv
 │  └─ submission.csv
+├─ report_recsys_5_assets/
 └─ save_parquet/
-	 └─ duckdb_temp/
+	└─ duckdb_temp/
+├─ src/
+│  ├─ __init__.py
+│  ├─ health.py
+│  └─ rerank.py
+└─ tools/
+	├─ build_marketplace_health_notebook.py
+	└─ generate_report_assets.py
 ```
 
 ### Pipeline graph (data flow and file locations)
@@ -66,7 +89,7 @@ The notebook expects the cleaned dataset layout under `datathon_2026_processed/`
 - `train_clean/fact_user_events/**/**/*.parquet`
 - `test/test_users.parquet`
 
-Paths are configured at the top of the notebook (Windows absolute paths are currently used). If you move the dataset, update `BASE_DATA_DIR` in the first code cell.
+Paths are configured at the top of the notebook (Windows absolute paths are currently used). If you move the dataset, update `BASE_DATA_DIR` in the first code cell of [notebooks/recsys_5_fixed.ipynb](notebooks/recsys_5_fixed.ipynb).
 
 ## End-to-end pipeline (full workflow)
 1. **Environment and configuration**
@@ -122,7 +145,7 @@ Paths are configured at the top of the notebook (Windows absolute paths are curr
 	- Save final `output/submission.csv` with columns `ID`, `user_id`, `rank`, `item_id`.
 
 ## How to run
-1. Open [recsys_5_fixed.ipynb](recsys_5_fixed.ipynb) in VS Code.
+1. Open [notebooks/recsys_5_fixed.ipynb](notebooks/recsys_5_fixed.ipynb) in VS Code.
 2. Update `BASE_DATA_DIR` if your dataset path differs.
 3. Run cells top-to-bottom.
 4. The final submission is written to `output/submission.csv`.
